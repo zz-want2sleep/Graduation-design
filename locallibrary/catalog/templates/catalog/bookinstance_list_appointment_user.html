@@ -1,0 +1,97 @@
+{% extends "base_generic.html" %} {% block content %}
+<div class="row">
+        <div class="col-lg-6">
+          <div class="input-group">
+            <h1><span class="label label-primary">预约的图书</span></h1>
+            <span class="label label-info">每个用户限定预约<span class="text-danger">五本<span class="glyphicon glyphicon-book"></span></span></span>
+          </div>
+          <!-- /input-group -->
+        </div>
+        <!-- /.col-lg-6 -->
+        <form class="col-lg-6">
+          <div class="input-group">
+            <input
+              name="appointmentFilter"
+              type="text"
+              class="form-control appointmentFilter"
+              placeholder="Search for..."
+            />
+            <span class="input-group-btn">
+              <button class="btn btn-default appointmentFilter" type="button"><span class="glyphicon glyphicon-search"></span>Go!</button>
+            </span>
+          </div>
+          <!-- /input-group -->
+        <form>
+        <!-- /.col-lg-6 -->
+      </div>
+      <!-- /.row -->
+{% if bookinstance_list %}
+<ul class="list-group">
+  {% for bookinst in bookinstance_list %}
+  <li class=" list-group-item {% if bookinst.is_overdue %}text-danger  list-group-item-danger{% endif %}">
+    <a href="{% url 'catalog:book-detail' bookinst.book.pk %}"
+      ><span class="glyphicon glyphicon-book"></span> {{bookinst.book.title}}</a
+    > &nbsp;&nbsp;&nbsp;
+    <span class="glyphicon glyphicon-time"></span>预约日期：({{ bookinst.appointment_time }})
+    {% if bookinst.is_overappointment %}
+    
+    <span class="label label-danger">逾期</span>
+
+    {% else %}
+    <div class="alert alert-info" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign"></span><span class="text-danger">请注意！借书时间限定在一天之内</span>
+    
+    {% endif %}
+  </div>
+  </li>
+  {% endfor %}
+</ul>
+
+{% else %}
+<div class="alert alert-success" role="alert">...</div>
+<div class="alert alert-info" role="alert">...</div>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Warning!</strong>没有预约记录，快去预约图书！
+</div>
+{% endif %}
+<script>
+  $(function(){
+    $("button.appointmentFilter").on("click", function(e) {
+    e.preventDefault();
+    // console.log(1);
+    if (
+      !$("input.form-control.appointmentFilter")
+        .val()
+        .trim()
+    ) {
+      // console.log(11);
+      $(location).attr("href", window.location.pathname);
+    } else {
+      // console.log(22);
+      if (window.location.pathname.lastIndexOf("/") == 23) {
+        $(location).attr(
+          "href",
+          window.location.pathname +
+            "s/" +
+            $("input.form-control.appointmentFilter")
+              .val()
+              .trim()
+        );
+      } else {
+        $(location).attr(
+          "href",
+          window.location.pathname.substring(0, 26) +
+            $("input.form-control.appointmentFilter")
+              .val()
+              .trim()
+        );
+      }
+    }
+  });
+  })
+
+</script>
+{% endblock %}

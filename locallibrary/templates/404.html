@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'catalog/css/404.css' %} " />
+    <link rel="icon" href="{% static 'catalog/image/fav.ico'%}" />
+    <title>错误页面</title>
+  </head>
+  <body>
+    <!---404--->
+    <h1>404</h1>
+    <div class="error_new_bg pr">
+      <div class="error_new_content">
+        <div class="error_new pa">
+          <div class="fl error_new_left">
+            <img src="{% static 'catalog/image/404.png' %}" />
+          </div>
+          <div class="fl error_new_right">
+            <div class="error_detail">
+              <p class="error_p_title">哎呦~ 页面没有找到!</p>
+              <p class="error_p_con">※ 别急，工程师正在紧急处理,马上就好。</p>
+              <p class="error_p_con">
+                ※ 您可联系QQ:670736258，通知代码搬运工!
+              </p>
+              <p class="error_p_con">※ 感谢您的支持!</p>
+            </div>
+
+            <p class="error_new_right_btn pr">
+              <a href="/catalog/" class="type-2 type-3">
+                <i> 返回首页</i>
+                <i> 返回首页 </i>
+                <i> 返回首页 </i>
+                <i> 返回首页 </i>
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,66 @@
+{% extends "base_generic.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-6">
+      <div class="input-group">
+        <h1 style="display: inline-block;"><span class="label label-primary">图书列表</span></h1>
+        {% if user.is_authenticated and perms.catalog.can_mark_returned%}
+       <a class="btn btn-primary" style="margin-left: 20px;" href="{%url 'catalog:book_create' %}"><span class="glyphicon glyphicon-plus"></span> <span style="color: white; font-weight: bold; text-decoration: none;">添加图书</span></a>
+      {% endif %}
+      <div class="btn-group" style="margin-left:20px;">
+        <button type="button" class="btn btn-primary">图书类别</button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          {%for genre in genres %}
+          <li><a href="{%url 'catalog:genre-books' genre %}">{{genre}}</a></li>
+          {%endfor%}
+          <!-- <li><a href="#">Action</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li> -->
+          <!-- <li role="separator" class="divider"></li> -->
+          <!-- <li><a href="#">Separated link</a></li> -->
+        </ul>
+      </div>
+      </div>
+      <!-- /input-group -->
+    </div>
+    <!-- /.col-lg-6 -->
+    <form class="col-lg-6">
+      <div class="input-group">
+        <input
+          name="bookFilter"
+          type="text"
+          class="form-control bookFilter"
+          placeholder="Search for..."
+        />
+        <span class="input-group-btn">
+          <button class="btn btn-default bookFilter" type="button"><span class="glyphicon glyphicon-search"></span>Go!</button>
+        </span>
+      </div>
+      <!-- /input-group -->
+    <form>
+    <!-- /.col-lg-6 -->
+  </div>
+  <!-- /.row -->
+
+{% if book_list %}
+<ul class="list-group">
+  {% for book in book_list %}
+  <li class="list-group-item"><span class="glyphicon glyphicon-book"></span>
+    <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>({{book.author}})
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="alert alert-success" role="alert">...</div>
+<div class="alert alert-info" role="alert">...</div>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Warning!</strong> 图书平台里面没有书，很可笑不是吗？还不赶紧添加书籍.
+</div>
+{% endif %} {% endblock %}

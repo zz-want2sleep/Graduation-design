@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link
+  rel="stylesheet"
+  href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+/>
+  <title>添加作者</title>
+</head>
+<body>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">添加作者</h3>
+        </div>
+        <div class="panel-body">
+          <form action="" method="post">
+            {% csrf_token %}
+      <div class="table-responsive ">
+            <table class="table table-bordered table-striped">
+              {{ form.as_table }}
+            </table>
+            <input type="submit" value="提交" class="btn btn-primary btn-lg btn-block" />
+          </form>
+        </div>
+      </div>
+      </div>
+      <style>
+        .errorlist {
+          background-color: pink;
+        }
+        .helptext {
+          color:blue;
+          font-weight: bold;
+        }
+      </style>
+       
+</body>
+</html>

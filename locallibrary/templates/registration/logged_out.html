@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %} {% block content %}
+<div class="alert alert-success" role="alert">成功退出登录</div>
+<div class="jumbotron">
+  <h1>安全登出为账号安全提供保障</h1>
+  <p class="text-primary">感谢您今天在本站花费了一些宝贵时间。</p>
+  <p>
+    <a class="btn btn-primary btn-lg" href="{% url 'login'%}" role="button"
+      >重新登录</a
+    >
+  </p>
+</div>
+{% endblock %}

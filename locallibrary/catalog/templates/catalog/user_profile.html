@@ -1,0 +1,51 @@
+{% extends "base_generic.html" %} {% block content %}
+<style>
+  .update a,
+  .delete a {
+    color: white;
+    font-weight: bold;
+  }
+  .update a:hover,
+  .delete a:hover {
+    color: white;
+    text-decoration: none;
+  }
+</style>
+<div class="page-header">
+  <h1>
+    <span class="label label-primary">用户信息:</span>
+    <small class="text-primary"
+      ><span class="glyphicon glyphicon-user"></span> {{ user }}</small
+    >
+  </h1>
+  <ul class="list-group">
+    <li class="list-group-item list-group-item-info">
+      名字：{{user.first_name}}
+    </li>
+    <li class="list-group-item list-group-item-info">
+      姓氏：{{user.last_name}}
+    </li>
+    {%if user.email %}
+    <li class="list-group-item list-group-item-info">
+      <span class="glyphicon glyphicon-envelope"></span> email：{{user.email}}
+    </li>
+    {%else%}
+    <li class="list-group-item list-group-item-danger">
+      <span class="glyphicon glyphicon-envelope"></span>
+      email：建议完善邮箱信息以便忘记密码时找回密码！
+    </li>
+    {% endif %}
+    <li class="list-group-item list-group-item-info">
+      <span class="glyphicon glyphicon-time"></span>
+      上次登录时间：{{user.last_login}}
+    </li>
+    <li class="list-group-item list-group-item-info">
+      <span class="glyphicon glyphicon-time"></span>
+      账号创建的时间：{{user.date_joined}}
+    </li>
+  </ul>
+  <a class="btn btn-warning update" href="{%url 'catalog:user_update' user.pk%}"
+    ><span class="glyphicon glyphicon-pencil"></span> 完善个人资料</a
+  >
+</div>
+{% endblock %}

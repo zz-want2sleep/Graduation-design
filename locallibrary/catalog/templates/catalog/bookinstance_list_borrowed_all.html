@@ -1,0 +1,108 @@
+{% extends "base_generic.html" %} {% block content %}
+<div class="row">
+    {% if request.session.res == '0'%}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>提示：</strong> 邮件发送失败,可能是个别用户未完善个人邮箱信息。
+    </div>
+    
+    {%elif  request.session.res%}
+   
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>提示：</strong> 邮件发送成功。
+    </div>
+    {%endif%}
+        <div class="col-lg-6">
+           
+          <div class="input-group">
+            <h1  style="display: inline-block;"><span class="label label-primary">所有借阅的图书</span></h1>
+            {% load catalog_extras %}
+            {% if bookinstance_list and user.is_authenticated %}
+
+            {% for bookinst in bookinstance_list %}
+            {% if bookinst.is_overdue %}
+            <span class="send_email hidden" >{{bookinst.borrower.username|addstr:',' }}</span>
+            {% endif %}
+            {% endfor %}
+
+            <button type="button" class="btn btn-primary send_email" id="send_email" style="margin-left: 20px;"><span class="glyphicon glyphicon-envelope"></span> <a href="#"><span style="color: white; font-weight: bold; text-decoration: none;">发送还书通知</span></a></button>
+
+            {% endif %}
+          </div>
+          <!-- /input-group -->
+        </div>
+        
+        <!-- /.col-lg-6 -->
+        <form class="col-lg-6">
+          <div class="input-group">
+            <input
+              name="allBorrowerFilter"
+              type="text"
+              class="form-control allBorrowerFilter"
+              placeholder="Search for..."
+            />
+            <span class="input-group-btn">
+              <button class="btn btn-default allBorrowerFilter" type="button"><span class="glyphicon glyphicon-search"></span>Go!</button>
+            </span>
+          </div>
+          <!-- /input-group -->
+        <form>
+        <!-- /.col-lg-6 -->
+      </div>
+      <!-- /.row -->
+{% if bookinstance_list %}
+<ul class="list-group">
+  {% for bookinst in bookinstance_list %}
+  <li class=" list-group-item {% if bookinst.is_overdue %}text-danger  list-group-item-danger{% endif %}">
+    <a href="{% url 'catalog:book-detail' bookinst.book.pk %}"
+      ><span class="glyphicon glyphicon-book"></span> {{bookinst.book.title}}</a
+    >
+    &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-time"></span> 归还日期：({{ bookinst.due_back }})
+    {% if user.is_staff %}- {{ bookinst.borrower }}{% endif %}
+    {% if bookinst.is_overdue %}
+    
+    <span class="label label-danger">违约</span>
+    {% if perms.catalog.can_mark_returned %} 
+    
+    <a href="{% url 'catalog:renew-book-librarian' bookinst.id %}"    class="text-muted" style=" float: right; margin-left: 10px;"><span class="label label-success"><span class="
+      glyphicon glyphicon-star-empty"></span> 续借</span></a>
+    <a href="{%url 'catalog:rent_out' id=bookinst.id pk=bookinst.book.pk %}" class="text-muted" style=" float: right; "><span class="label label-primary"><span class="
+      glyphicon glyphicon-star-empty"></span> 租借</span></a>
+    
+    {% endif %}
+    {% else %}
+    <div class="alert alert-info" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign"></span><span class="text-danger">距离还书期限还剩</span><span class="label label-primary">{{ bookinst.calculate_due_back }}</span><span class="text-danger">天</span>
+    {% if perms.catalog.can_mark_returned %} <a href="{% url 'catalog:renew-book-librarian' bookinst.id %}" class="text-muted" style=" float: right;margin-left: 10px; "><span class="label label-success"><span class="
+      glyphicon glyphicon-star-empty"></span> 续借</span></a>
+      <a href="{%url 'catalog:rent_out' id=bookinst.id pk=bookinst.book.pk %}" class="text-muted" style=" float: right; "><span class="label label-primary"><span class="
+        glyphicon glyphicon-star-empty"></span> 租借</span></a>
+    {% endif %}
+  </div>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+{% else %}
+<div class="alert alert-success" role="alert">...</div>
+<div class="alert alert-info" role="alert">...</div>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Warning!</strong>没有借阅记录！
+</div>
+{% endif %}
+<script>
+$(function(){
+if(!$(".send_email.hidden").text()){
+  $("#send_email").attr("disabled","disabled")
+}else{
+  $("#send_email").removeAttr("disabled");
+}
+// console.log(111111111111)
+})
+</script> 
+{% endblock %}

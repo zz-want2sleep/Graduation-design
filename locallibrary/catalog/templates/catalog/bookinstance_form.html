@@ -1,0 +1,53 @@
+{% extends "base_generic.html" %} {% block content %}
+<div id="alert-danger" class="hidden" role="alert">请不要忘记选择借书用户。</div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">出租图书</h3>
+  </div>
+  <div class="panel-body">
+    <form action="" method="post">
+      {% csrf_token %}
+<div class="table-responsive ">
+      <table class="table table-bordered table-striped">
+        {{ form.as_table }}
+      </table>
+      <input type="submit" value="提交" class="btn btn-primary btn-lg btn-block" />
+    </form>
+  </div>
+</div>
+</div>
+<style>
+  .errorlist {
+    background-color: pink;
+  }
+  .helptext {
+    color:blue;
+    font-weight: bold;
+  }
+  .myself {
+    display: inline-block;
+    margin-left:10px;
+  }
+</style>
+<script>
+// $(function(){
+//   $('input').prop('required',true)
+//   $('#id_due_back').prop('type','date')
+//   var now = new Date();
+//   var day = ("0" + now.getDate()).slice(-2);
+//   var month = ("0" + (now.getMonth() + 1)).slice(-2);
+//   var today = now.getFullYear()+"-"+month+"-"+day ;
+//   if($('#id_borrower option:selected').text()=="---------"){
+//       $('div.alert-danger').removeAttr('class','hidden')
+//       $('#alert-danger').addClass('alert alert-danger')
+//     }
+    
+//   $('#id_due_back').focus(function(){
+//    if($('#id_status').val()=='o'){ 
+//     $('#id_due_back').val(today)}
+//     })
+   
+// })
+
+</script>
+{% endblock %}

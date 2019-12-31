@@ -1,0 +1,138 @@
+{% extends "base_generic.html" %}  {% block content %}
+{%if request.get_full_path|slice:"-2:" == "=4" %}
+<div class="alert alert-success" role="alert"><strong>完成租借操作</strong></div>
+{%endif%}
+{%if request.get_full_path|slice:"-2:" == "=5" %}
+<div class="alert alert-danger" role="alert"><strong>抱歉!你的预约次数达到上限。</strong></div>
+{%endif%}
+{%if request.get_full_path|slice:"-2:" == "=2" %}
+<div class="alert alert-danger" role="alert"><strong>抱歉！有人先你一步。</strong></div>
+{%elif  request.get_full_path|slice:"-2:" == "=3"%}
+<div class="alert alert-success" role="alert"><strong>恭喜！预约成功</strong></div>
+{%endif%}
+{%if errors == '2' %}
+<div class="alert alert-danger" role="alert"><strong>增添图书副本失败</strong></div>
+{%elif errors == '1' %}
+<div class="alert alert-success" role="alert"><strong>增添图书副本成功</strong></div>
+{%endif%}
+<div class="page-header">
+  <h1><span class="label label-primary">书名:</span>
+    <small class="text-primary"><span class="glyphicon glyphicon-book"></span>  {{ book.title }}</small>
+  </h1>
+  {% if user.is_authenticated%}
+  <a
+  class="btn btn-primary update"
+  href="{%url 'catalog:book_update' book.pk %}"
+  ><span class="glyphicon glyphicon-refresh"></span> 修改图书</a
+>
+{%endif%}
+{%if perms.catalog.delete_book%}
+<a
+  class="btn btn-danger delete"
+  href="{%url 'catalog:book_delete' book.pk %}"
+  ><span class="glyphicon glyphicon-remove"></span> 删除图书</a
+>
+{%endif%}
+</div>
+{%if book.pic%}
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title"><span class="glyphicon glyphicon-picture"></span> <span class="text-primary"><strong>封面展示</strong></span></h3>
+  </div>
+  <div class="panel-body">
+    <img src="{{book.pic.url}}" alt="图片" class="img-thumbnail img-responsive center-block"/>
+  </div>
+</div>
+    
+{%endif%}
+<p>
+  <strong><span class="glyphicon glyphicon-user"></span> 作者信息:</strong>
+  {% if book.author%}
+  <a href="{% url 'catalog:author-detail' book.author.pk %}">{{ book.author }}</a>
+  {%else%}
+  <span class="text-danger">作者信息已经被删除</span>
+  {%endif%}
+</p>
+<!-- author detail link not yet defined -->
+<div class="panel panel-default">
+        <div class="panel-heading"><strong>图书简介:</strong></div>
+        <div class="panel-body
+        text-info" >
+            
+                {{ book.summary }}
+        </div>
+      </div>
+<!-- <p><strong>图书简介:</strong> {{ book.summary }}</p> -->
+<p><strong><span class="glyphicon glyphicon-barcode"></span> ISBN:</strong> <span class="badge">{{ book.isbn }}</span></p>
+<p><strong><span class="glyphicon glyphicon-globe"></span> 图书语种:</strong><span class="badge"> {{ book.language }}</span></p>
+<p>
+  <strong><span class="glyphicon glyphicon-tags"></span> 图书类别:</strong>{% for genre in book.genre.all %} <a href="{%url 'catalog:genre-books' genre %}"><span class="btn btn-primary btn-xs"
+    >{{genre}}</span
+  ></a>
+  {% if not forloop.last %}{% endif%}{% endfor %}
+</p>
+
+<div style="margin-left:20px;margin-top:20px">
+  <h3><span class="label label-primary">图书副本信息</span>
+  {% if user.is_authenticated and perms.catalog.can_mark_returned%}
+    <a class="btn btn-success btn-xs" style="margin-top: 5px;" href="{%url 'catalog:bulkcreatebookinstance' book.pk %}"><span class="glyphicon glyphicon-plus"></span> <span style="color: white; font-weight: bold; text-decoration: none;">添加图书副本</span></a>
+  {% endif %}
+  </h4>
+    
+{%if book.bookinstance_set.all%}
+  {% for copy in book.bookinstance_set.all %}
+  <hr />
+  <div class="panel panel-default">
+        <div class="panel-body">
+          <div class="col-sm-8">
+                <p
+                class="{% if copy.status == 'a' %}text-success{% elif copy.status == 'm' %}text-danger{% else %}text-warning{% endif %}"
+              ><span class="glyphicon glyphicon-info-sign"></span> 
+                {{ copy.get_status_display }}
+              </p>
+              {% if copy.status != 'a' and copy.due_back %}
+              <p><strong><span class="glyphicon glyphicon-time"></span> 图书归还日期:</strong> {{copy.due_back}}</p>
+              {% endif %}
+              {% if copy.borrower and perms.catalog.can_mark_returned %}
+              <p><strong><span class="glyphicon glyphicon-user"></span> 借书用户:</strong> {{copy.borrower}}</p>
+              
+              {% elif user == copy.borrower and copy.borrower %}
+              <p class="text-primary"><strong><span class="glyphicon glyphicon-user"></span> 借书用户:</strong> {{copy.borrower}}</p>
+              {% endif %}
+              {% if copy.appointment and perms.catalog.can_mark_returned %}
+              <p><strong><span class="glyphicon glyphicon-user"></span> 预约用户:</strong> {{copy.appointment}}</p>
+  
+              {% elif user == copy.appointment and copy.appointment %}
+              <p class="text-primary"><strong><span class="glyphicon glyphicon-user"></span> 预约用户:</strong> {{copy.appointment}}</p>
+              {% endif %}
+              <p><strong><span class="glyphicon glyphicon-briefcase"></span> 出版信息:</strong> {{copy.imprint}}</p>
+              <p class="text-muted"><strong><span class="glyphicon glyphicon-qrcode"></span> Id:</strong> {{copy.id}}</p>
+            </div>
+            <div class="col-sm-4 borrow" >
+              {% if user.is_authenticated and perms.catalog.can_mark_returned %}
+          <a href="{%url 'catalog:rent_out' id=copy.id pk=book.pk %}" class="btn btn-primary" style="float: right; margin-left:10px;"><span class="
+            glyphicon glyphicon-star-empty"></span> <span class="text-default">租借</span></a>
+            {%endif%}
+            {% if user.is_authenticated and copy.status == 'a' and user.email %}
+            <a href=" {%url 'catalog:appointment' pk=book.pk id=copy.id pk1=user.pk %} " class="btn btn-success" style="float: right;"><span class="
+              glyphicon glyphicon-star-empty"></span> <span class="text-default">预约</span></a>
+              {%endif%}
+        </div>
+        </div>
+        
+      </div>
+ 
+  {% endfor %}
+  {%else%}
+  <div class="alert alert-success" role="alert">...</div>
+  <div class="alert alert-info" role="alert">...</div>
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>Warning!</strong> 请图书管理员赶紧完成图书副本入库操作，该有的书都没有！
+  </div>
+  {%endif%}
+
+</div>
+{% endblock %}

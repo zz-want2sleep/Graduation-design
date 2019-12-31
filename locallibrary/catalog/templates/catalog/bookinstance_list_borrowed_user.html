@@ -1,0 +1,68 @@
+{% extends "base_generic.html" %} {% block content %}
+<div class="row">
+    <a href="{%url 'catalog:my_history'%}" class="label label-default" style="position:absolute;right:15px;top:44px;">历史清单</a>
+        <div class="col-lg-6">
+          <div class="input-group">
+            <h1 ><span class="label label-primary">借阅的图书          </span>
+            </h1>
+            <span class="label label-info">每个用户限定借阅<span class="text-danger">五本<span class="text- glyphicon glyphicon-book"></span></span></span>
+          </div>
+
+          <!-- /input-group -->
+        </div>
+        
+        <!-- /.col-lg-6 -->
+        <form class="col-lg-6">
+          <div class="input-group">
+            <input
+              name="borrowerFilter"
+              type="text"
+              class="form-control borrowerFilter"
+              placeholder="Search for..."
+            />
+            <span class="input-group-btn">
+              <button class="btn btn-default borrowerFilter" type="button"><span class="glyphicon glyphicon-search"></span>Go!</button>
+            </span>
+          </div>
+          <!-- /input-group -->
+        <form>
+        <!-- /.col-lg-6 -->
+      </div>
+      
+      <!-- /.row -->
+{% if bookinstance_list %}
+<ul class="list-group">
+  {% for bookinst in bookinstance_list %}
+  <li class=" list-group-item {% if bookinst.is_overdue %}text-danger  list-group-item-danger{% endif %}">
+    <a href="{% url 'catalog:book-detail' bookinst.book.pk %}"
+      ><span class="glyphicon glyphicon-book"></span> {{bookinst.book.title}}</a
+    > &nbsp;&nbsp;&nbsp;
+    <span class="glyphicon glyphicon-time"></span>归还日期：({{ bookinst.due_back }})
+    {% if bookinst.is_overdue %}
+    
+    <span class="label label-danger">违约</span>
+    {% if perms.catalog.can_mark_returned %}<a href="{% url 'catalog:renew-book-librarian' bookinst.id %}" class="text-muted" style=" float: right; "><span class="label label-primary">续借</span></a>
+    
+    {% endif %}
+    {% else %}
+    <div class="alert alert-info" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign"></span><span class="text-danger">距离还书期限还剩</span><span class="label label-primary">{{ bookinst.calculate_due_back }}</span><span class="text-danger">天</span>
+    {% if perms.catalog.can_mark_returned %}<a href="{% url 'catalog:renew-book-librarian' bookinst.id %}" class="text-muted" style=" float: right; "><span class="label label-primary">续借</span></a>
+    
+    {% endif %}
+  </div>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+
+{% else %}
+<div class="alert alert-success" role="alert">...</div>
+<div class="alert alert-info" role="alert">...</div>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Warning!</strong>没有借阅记录，快去借书！
+</div>
+{% endif %} {% endblock %}

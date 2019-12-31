@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %} {% block content %}
+
+
+<div class="jumbotron">
+<h3><span class="label label-danger"><span class="glyphicon glyphicon-remove"></span>删除作者</span></h3>
+ 
+    <div class="alert alert-danger" role="alert">
+        <p><span>您确定要删除作者：</span><span class="glyphicon glyphicon-user"></span> {{ author }}?
+    </div>
+    
+    </p>
+    <p> <form action="" method="POST">
+        {% csrf_token %}
+        <input class="btn btn-danger btn-lg btn-block" type="submit" action="" value="确认删除" />
+      </form></p>
+  </div>
+{% endblock %}

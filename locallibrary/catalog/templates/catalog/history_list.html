@@ -1,0 +1,49 @@
+{% extends "base_generic.html" %}
+{% block content %}
+
+<div class="row">
+  <div class="col-lg-6">
+    <div class="input-group">
+      <h1 style="display: inline-block;"><span class="label label-primary">历史清单</span></h1>
+      {% if user.is_authenticated and history_list%}
+       <a class="btn btn-danger" style="margin-left: 20px;" href="{%url 'catalog:deletehistory'%}"><span class="glyphicon glyphicon-remove"></span> <span style="color: white; font-weight: bold; text-decoration: none;">清空历史</span></a>
+      {% endif %}
+    </div>
+    <!-- /input-group -->
+  </div>
+  <!-- /.col-lg-6 -->
+  <!-- <form class="col-lg-6">
+    <div class="input-group">
+      <input
+        name="authorFilter"
+        type="text"
+        class="form-control authorFilter"
+        placeholder="Search for..."
+      />
+      <span class="input-group-btn">
+        <button class="btn btn-default authorFilter" type="button"><span class="glyphicon glyphicon-search"></span>Go!</button>
+      </span>
+    </div> -->
+    <!-- /input-group -->
+  <!-- /.col-lg-6 -->
+</div>
+<!-- /.row -->
+{% if history_list %}
+<ul class="list-group">
+  {% for history in history_list %}
+  <li class="list-group-item"><span class="glyphicon glyphicon-book"></span> <strong>{{ history.books }}</strong></span> <span class="glyphicon glyphicon-time"></span>
+{{ history.rent_time }}
+  </li>
+
+  {% endfor %}
+</ul>
+{% else %}
+<div class="alert alert-success" role="alert">...</div>
+<div class="alert alert-info" role="alert">...</div>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  <strong>Warning!</strong> 没有相关的记录.
+</div>
+{% endif %} {% endblock %}

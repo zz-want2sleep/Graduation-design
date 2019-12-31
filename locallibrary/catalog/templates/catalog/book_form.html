@@ -1,0 +1,55 @@
+{% extends "base_generic.html" %} {% block content %}
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    {%if request.get_full_path|slice:"-7:" == 'update/'%}
+    <h3 class="panel-title">修改图书</h3>
+    {%elif request.get_full_path|slice:"-7:" != 'update/'%}
+    <h3 class="panel-title">添加图书</h3>
+    {%endif%}
+  </div>
+  <div class="panel-body">
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+<div class="table-responsive ">
+      <table class="table table-bordered table-striped">
+        {{ form.as_table }}
+      </table>
+      <input type="submit" value="提交" class="btn btn-primary btn-lg btn-block" />
+    </form>
+  </div>
+</div>
+</div>
+<style>
+  .errorlist {
+    background-color: pink;
+  }
+  .helptext {
+    color:blue;
+    font-weight: bold;
+  }
+  .myself {
+    display: inline-block;
+    margin-left:10px;
+  }
+</style>
+<script>
+  $(function(){
+$('#id_author').after($('<a href="#" class="myself text-success"><span class="glyphicon glyphicon-plus"></span></a>'));
+  })
+  $(document).ready(function(){
+  $(".myself").click(function(){
+    let left = window.screen.availWidth-400
+    window.open(
+          "/catalog/p1",
+          "添加作者信息",
+          "height=400,width=400,toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no,left="+left+""
+        );
+  });
+});
+function p1_receive_func(data,id) {
+
+  $('#id_author option').children("option:selected").prop("selected", false)
+        $("#id_author").append('<option selected value='+id+'>'+data+'</option>');
+      }
+</script>
+{% endblock %}
