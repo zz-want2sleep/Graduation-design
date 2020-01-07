@@ -148,9 +148,9 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.qq.com'  # 如果是 163 改成 smtp.163.com
 EMAIL_PORT = 465
-EMAIL_HOST_USER = '670736258@qq.com'  # 帐号
-EMAIL_HOST_PASSWORD = 'ptuaaurunnnmbfig'  # 密码
-DEFAULT_FROM_EMAIL = 'LocalLibrarySystem <670736258@qq.com>'
+EMAIL_HOST_USER = 'xxx'  # 帐号
+EMAIL_HOST_PASSWORD = 'xxx'  # 密码
+DEFAULT_FROM_EMAIL = 'LocalLibrarySystem <xxxx@qq.com>'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
