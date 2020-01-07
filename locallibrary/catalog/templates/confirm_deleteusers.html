@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    {% load static %}
+    <link rel="icon" href="{%static 'catalog/image/fav.ico'%}" />
+    <title>批量删除用户</title>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="panel panel-primary">
+      <div class="panel-body">
+        <h1><span class="text-primary">批量删除用户页面</span></h1>
+      </div>
+    </div>
+
+
+<div class="jumbotron">
+<h3><span class="label label-danger"><span class="glyphicon glyphicon-remove"></span>删除用户</span></h3>
+ 
+    <div class="alert alert-danger" role="alert">
+    <span>您确定要删除以下用户？
+    <ul class="list-group">
+        {%for user in user_list%}
+        <li class="list-group-item"></span><span class="glyphicon glyphicon-user"></span> {{user}}</li>
+        {%endfor%}
+      </ul>
+    </div>
+    
+    <p> <form action="{%url 'catalog:deleteusers' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="user-list" value={{user_list1}}>
+        <input class="btn btn-danger btn-lg btn-block" type="submit" action="" value="确认删除" />
+      </form></p>
+  </div>
+</body>
+</html>
+

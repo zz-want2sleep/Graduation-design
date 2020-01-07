@@ -1,4 +1,10 @@
 {% extends "base_generic.html" %} {% block content %}
+{%if request.get_full_path|slice:"-3:" == "s=1" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  完成归还操作
+</div>
+{%endif%}
 <div class="row">
     <a href="{%url 'catalog:my_history'%}" class="label label-default" style="position:absolute;right:15px;top:44px;">历史清单</a>
         <div class="col-lg-6">
@@ -47,7 +53,13 @@
     {% else %}
     <div class="alert alert-info" role="alert">
     <span class="glyphicon glyphicon-exclamation-sign"></span><span class="text-danger">距离还书期限还剩</span><span class="label label-primary">{{ bookinst.calculate_due_back }}</span><span class="text-danger">天</span>
-    {% if perms.catalog.can_mark_returned %}<a href="{% url 'catalog:renew-book-librarian' bookinst.id %}" class="text-muted" style=" float: right; "><span class="label label-primary">续借</span></a>
+    {% if perms.catalog.can_mark_returned %}
+    {%if bookinst.status == 'o'%}
+    <a href="{% url 'catalog:returnedbook' id=bookinst.id next=request.path %}" class="text-muted returned" style=" float: right; margin-left: 10px;"><span class="label label-danger"><span class="
+      glyphicon glyphicon-star-empty"></span> 归还</span></a>
+      {%endif%}
+    <a href="{% url 'catalog:renew-book-librarian' bookinst.id %}" class="text-muted" style=" float: right; "><span class="label label-primary"><span class="
+      glyphicon glyphicon-star-empty"></span> 续借</span></a>
     
     {% endif %}
   </div>

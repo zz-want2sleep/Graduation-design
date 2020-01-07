@@ -28,15 +28,33 @@ $(function() {
 $(document).ready(function() {
   $("button.btn.btn-default.pagination1").click(function(e) {
     e.preventDefault();
-    $(location).attr(
-      "href",
-      window.location.pathname +
-        "?page=" +
+    if (
+      Number(
+        $(".pages")
+          .val()
+          .trim()
+      ) <
+      Number(
         $("#paginator")
           .val()
-          .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
           .trim()
-    );
+      )
+    ) {
+      $(location).attr(
+        "href",
+        window.location.pathname + "?page=" + $(".pages").val()
+      );
+    } else {
+      $(location).attr(
+        "href",
+        window.location.pathname +
+          "?page=" +
+          $("#paginator")
+            .val()
+            .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
+            .trim()
+      );
+    }
   });
   // ------------
   $("button.authorFilter").on("click", function(e) {
@@ -45,7 +63,7 @@ $(document).ready(function() {
     if (
       !$("input.form-control.authorFilter")
         .val()
-        .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+        .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
         .trim()
     ) {
       $(location).attr("href", window.location.pathname);
@@ -57,7 +75,7 @@ $(document).ready(function() {
             "s/" +
             $("input.form-control.authorFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       } else {
@@ -66,7 +84,7 @@ $(document).ready(function() {
           window.location.pathname.substring(0, 19) +
             $("input.form-control.authorFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       }
@@ -80,7 +98,7 @@ $(document).ready(function() {
     if (
       !$("input.form-control.bookFilter")
         .val()
-        .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+        .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
         .trim()
     ) {
       $(location).attr("href", window.location.pathname);
@@ -92,7 +110,7 @@ $(document).ready(function() {
             "s/" +
             $("input.form-control.bookFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       } else {
@@ -101,7 +119,7 @@ $(document).ready(function() {
           window.location.pathname.substring(0, 17) +
             $("input.form-control.bookFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       }
@@ -114,7 +132,8 @@ $(document).ready(function() {
     if (
       !$("input.form-control.bookGenre")
         .val()
-        .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+        .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
+
         .trim()
     ) {
       $(location).attr("href", window.location.pathname);
@@ -126,7 +145,7 @@ $(document).ready(function() {
             "/s/" +
             $("input.form-control.bookGenre")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       } else {
@@ -136,7 +155,7 @@ $(document).ready(function() {
           window.location.pathname.substring(0, num) +
             $("input.form-control.bookGenre")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       }
@@ -150,7 +169,7 @@ $(document).ready(function() {
     if (
       !$("input.form-control.borrowerFilter")
         .val()
-        .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+        .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
         .trim()
     ) {
       $(location).attr("href", window.location.pathname);
@@ -162,7 +181,7 @@ $(document).ready(function() {
             "s/" +
             $("input.form-control.borrowerFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       } else {
@@ -171,7 +190,7 @@ $(document).ready(function() {
           window.location.pathname.substring(0, 19) +
             $("input.form-control.borrowerFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       }
@@ -185,7 +204,7 @@ $(document).ready(function() {
     if (
       !$("input.form-control.allBorrowerFilter")
         .val()
-        .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+        .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
         .trim()
     ) {
       $(location).attr("href", window.location.pathname);
@@ -197,7 +216,7 @@ $(document).ready(function() {
             "s/" +
             $("input.form-control.allBorrowerFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       } else {
@@ -206,7 +225,7 @@ $(document).ready(function() {
           window.location.pathname.substring(0, 20) +
             $("input.form-control.allBorrowerFilter")
               .val()
-              .replace(/[~'!<>@#$%^&*()-+_=:/]/g, "")
+              .replace(/[~'!<>@#$%^&*()-+_=:/?]/g, "")
               .trim()
         );
       }
@@ -347,3 +366,23 @@ $(document).ready(function() {
 //     }
 //   });
 // });
+// -------------------------------------------returned
+$(function() {
+  $(".returned").on("click", function(e) {
+    var returned = window.confirm("单击“确定”继续还书。单击“取消”停止还书。");
+    if (!returned) {
+      e.preventDefault();
+    }
+  });
+});
+$(function() {
+  $(".createauthor").on("click", function(e) {
+    // console.log($("#id_date_of_birth").val());
+    if ($("#id_date_of_birth").val() && $("#id_date_of_death").val()) {
+      if ($("#id_date_of_birth").val() >= $("#id_date_of_death").val()) {
+        window.confirm("注意：出生日期一定要小于死亡日期！");
+        e.preventDefault();
+      }
+    }
+  });
+});

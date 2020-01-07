@@ -7,6 +7,23 @@
         {% if user.is_authenticated and perms.catalog.can_mark_returned%}
        <a class="btn btn-primary" style="margin-left: 20px;" href="{%url 'catalog:book_create' %}"><span class="glyphicon glyphicon-plus"></span> <span style="color: white; font-weight: bold; text-decoration: none;">添加图书</span></a>
       {% endif %}
+      <div class="btn-group" style="margin-left:20px;">
+        <button type="button" class="btn btn-primary">图书类别</button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+          {%for genre in genres %}
+          <li><a href="{%url 'catalog:genre-books' genre %}">{{genre}}</a></li>
+          {%endfor%}
+          <!-- <li><a href="#">Action</a></li>
+          <li><a href="#">Another action</a></li>
+          <li><a href="#">Something else here</a></li> -->
+          <!-- <li role="separator" class="divider"></li> -->
+          <!-- <li><a href="#">Separated link</a></li> -->
+        </ul>
+      </div>
       </div>
       <!-- /input-group -->
     </div>
@@ -29,9 +46,10 @@
   </div>
   <!-- /.row -->
 
-{% if book_list %}
+
+{% if page_obj %}
 <ul class="list-group">
-  {% for book in book_list %}
+  {% for book in page_obj %}
   <li class="list-group-item"><span class="glyphicon glyphicon-book"></span>
     <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-user"></span>({{book.author}})
   </li>
@@ -46,4 +64,45 @@
   </button>
   <strong>Warning!</strong> 图书平台里面没有书，很可笑不是吗？还不赶紧添加书籍.
 </div>
-{% endif %} {% endblock %}
+{% endif %} 
+{%if page_obj.paginator.num_pages > 1 %}
+<div class="pagination row">
+  <div class="col-sm-12" style="margin-bottom:10px;">
+  <span class="page-links">
+    {% if page_obj.has_previous %}
+    <a
+      href="{{ request.path }}?page={{ page_obj.previous_page_number }}"
+      ><span class="label label-primary">上一页</span></a
+    >
+    {% endif %}
+    <span class="badge text-danger"
+        >Page{{ page_obj.number }}
+        /{{ page_obj.paginator.num_pages }}</span
+      >
+    </span>
+    {% if page_obj.has_next %}
+    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}"
+      ><span class="label label-primary">下一页</span></a
+    >
+    {% endif %}
+  </span>
+</div>
+<form class="navbar-form navbar-left" role="search">
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-8" style="padding-right:0;margin-left: 15px;">
+      <input type="number" id="paginator" min="1" max="{{ page_obj.paginator.num_pages }}"
+      name="page" class="form-control" placeholder="页数跳转。">
+
+    </div>
+   
+    <div class="col-sm-2" style="padding-left: 15px;">
+    <button type="submit" class="btn btn-default pagination1"><span class="glyphicon glyphicon-search"></span>Go!</button>
+    </div>
+    <input type="hidden" class="pages" name="pages" value="{{page_obj.paginator.num_pages}}">
+    </div>
+  </div>
+  </form>
+</div>
+{%endif%}
+{% endblock %}

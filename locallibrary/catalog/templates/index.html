@@ -1,75 +1,96 @@
 {% extends "base_generic.html" %} {% block content %}
-<div class="jumbotron">
-  <h1>图书管理平台</h1>
-  <p class="text-info">
-    欢迎来到<em>图书管理系统平台</em>,这是一个针对毕业设计使用Django
-    web框架实现的一个基于Web的应用程序。
-  </p>
+<span></span>
+{%if request.get_full_path|slice:"-3:" == "p=1"%}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  完成个人信息修改操作
 </div>
-<div class="jumbotron  col-sm-5">
-  <h2>
-    图书馆信息统计<small
-      ><a
-        href="{%url 'catalog:statistical'%}"
-        class="btn btn-primary btn-xs"
-        role="button"
-        style="float:right;"
-        ><span class="glyphicon glyphicon-stats"></span> 统计</a
-      ></small
-    >
-  </h2>
+{% endif %}
 
-  <p>图书馆管理平台显示以下的记录：</p>
-  <ul class="list-group">
-    <li class="list-group-item list-group-item-success">
-      <strong>图书数目：</strong><span class="badge">{{num_books}}</span>
-    </li>
-    <li class="list-group-item list-group-item-info">
-      <strong>图书副本数目：</strong
-      ><span class="badge">{{num_instances}}</span>
-    </li>
-    <li class="list-group-item list-group-item-danger">
-      <strong>可借阅的图书副本数目：</strong
-      ><span class="badge">{{num_instances_available}}</span>
-    </li>
-    <li class="list-group-item list-group-item-warning">
-      <strong>作者数目：</strong><span class="badge"> {{num_authors}} </span>
-    </li>
-  </ul>
-  <hr style="visibility: hidden;" />
-  <div class="panel panel-primary">
-    <div class="panel-body">
-      <div class="panel panel-default">
-        <div class="panel-body">
-          您今天已访问此页面
-          <strong class="text-primary">{{ num_visits|add:1 }}</strong> 次。
+<div class="row">
+  <div class="jumbotron">
+    <h1>图书管理平台</h1>
+    <p class="text-info">
+      欢迎来到<em>图书管理系统平台</em>,这是一个针对毕业设计使用Django
+      web框架实现的一个基于Web的应用程序。
+    </p>
+  </div>
+
+  <div class="jumbotron  col-sm-5">
+    <h2>
+      图书馆信息统计<small
+        ><a
+          href="{%url 'catalog:statistical'%}"
+          class="btn btn-primary btn-xs"
+          role="button"
+          style="float:right;"
+          ><span class="glyphicon glyphicon-stats"></span> 统计</a
+        ></small
+      >
+    </h2>
+
+    <p>图书馆管理平台显示以下的记录：</p>
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-success">
+        <strong>图书数目：</strong><span class="badge">{{num_books}}</span>
+      </li>
+      <li class="list-group-item list-group-item-info">
+        <strong>图书副本数目：</strong
+        ><span class="badge">{{num_instances}}</span>
+      </li>
+      <li class="list-group-item list-group-item-danger">
+        <strong>可借阅的图书副本数目：</strong
+        ><span class="badge">{{num_instances_available}}</span>
+      </li>
+      <li class="list-group-item list-group-item-warning">
+        <strong>作者数目：</strong><span class="badge"> {{num_authors}} </span>
+      </li>
+    </ul>
+    <hr style="visibility: hidden;" />
+    <div class="panel panel-primary">
+      <div class="panel-body">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            您今天已访问此页面
+            <strong class="text-primary">{{ num_visits|add:1 }}</strong> 次。
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="jumbotron  col-sm-6">
-  <h3 class="text-warning">
-    <span class="glyphicon glyphicon-volume-up text-warning"></span> 通告：
-  </h3>
-  {%if informations%} {%for info in informations%}
-  <div class="alert alert-warning" role="alert">
-    <span class="glyphicon glyphicon-volume-up text-warning"></span
-    ><strong> {{info.title}}:</strong> {{info.info}}
-  </div>
+  <div class="jumbotron  col-sm-6">
+    <h3 class="text-warning">
+      <span class="glyphicon glyphicon-volume-up text-warning"></span> 通告：
+    </h3>
+    {%if informations%} {%for info in informations%}
+    <div class="alert alert-warning" role="alert">
+      <span class="glyphicon glyphicon-volume-up text-warning"></span
+      ><strong> {{info.title}}:</strong> {{info.info|safe}}
+    </div>
 
-  {%endfor%} {%endif%}
-</div>
-<div class="jumbotron  col-sm-5">
-  <h1>可扩展...</h1>
-  <div class="alert alert-warning alert-dismissible" id="code2" role="alert">
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <strong>Warning!</strong> 本应用不支持多浏览器同时登陆。
+    {%endfor%} {%endif%}
   </div>
 </div>
-<div class="jumbotron  col-sm-6">
-  <h1>可扩展...</h1>
+<div class="row">
+  <div class="jumbotron col-xs-8 col-sm-6">
+    <h1>可扩展...</h1>
+    <div class="alert alert-warning alert-dismissible" id="code2" role="alert">
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>Warning!</strong> 本应用不支持多浏览器同时登陆。
+    </div>
+  </div>
+  <div class="jumbotron col-xs-3 col-sm-5">
+    <h1>可扩展...</h1>
+  </div>
 </div>
+
 {% endblock %}

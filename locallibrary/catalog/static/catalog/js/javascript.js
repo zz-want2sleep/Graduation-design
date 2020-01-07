@@ -7,16 +7,21 @@ function fn1() {
       // 第六步： 使用responseText、responseXML接受响应数据，并使用原生JS操作DOM进行显示
       js1 = JSON.parse(ajax.responseText);
       // console.log(js1.code);
-      if (document.querySelector("#code2") != null) {
-        if (js1.code === 0) {
-          alert(
-            "提示:" + "您的账号在其他地方登录，若非本人操作，请立刻修改密码。"
-          );
-          // console.log(JSON.parse(ajax.responseText));
-        } else if (js1.code === 2) {
+
+      if (js1.code === 0) {
+        alert("提示:您的账号在其他地方登录，若非本人操作，请立刻修改密码。");
+        window.location = "/accounts/logout/?" + "o=1";
+        // console.log(JSON.parse(ajax.responseText));
+      } else if (js1.code === 2) {
+        console.log(11111);
+        if (document.querySelector("#code2")) {
           document.querySelector("#code2").className =
             "alert alert-warning alert-dismissible show";
-        } else {
+        }
+        confirm("不支持单一账号多浏览器登录");
+        window.location = "/accounts/logout/?" + "o=1";
+      } else {
+        if (document.querySelector("#code2")) {
           document.querySelector("#code2").className =
             "alert alert-warning alert-dismissible hidden";
         }

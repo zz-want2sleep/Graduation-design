@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    {% load static %}
+    <link rel="icon" href="{%static 'catalog/image/fav.ico'%}" />
+    <title>选取人数范围</title>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="panel panel-primary">
+      <div class="panel-body">
+        <h1><span class="text-primary">批量删除用户页面</span></h1>
+      </div>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+      <strong>指定用户账号不存在</strong>。
+    </div>
+    {%endif%}
+    <div class="jumbotron" style="padding-top: 0;">
+      <h1 style="margin-left:5px;">
+        <span class="text-primary"
+          ><span class="glyphicon glyphicon-plus-sign"></span>操作界面</span
+        >
+      </h1>
+      <p class="text-warning" style="margin-left:5px;">
+        <span class="glyphicon glyphicon-info-sign"></span
+        >账号数目和账号名称提前限定，以脚本的形式进行创建指定范围的和格式的账号(请保证你输入的学号始终唯一，包括对你给定的范围进行累加后生成的学号)。
+      </p>
+      <div class="container-fluid">
+        <div class="row">
+          <form method="post" class="col-sm-5">
+            {% csrf_token %}
+
+            <div class="input-group" style="margin-bottom: 20px;">
+              <label for="nums" class="input-group-addon">用户数量</label>
+              <input
+                id="nums"
+                value="{{num}}"
+                class="form-control"
+                type="number"
+                name="nums"
+                min="1"
+                max="999999999"
+                placeholder="确认用户数量"
+                aria-describedby="basic-addon1"
+                required
+              />
+              <!-- <p class="p1">0</p> -->
+            </div>
+
+            <div class="input-group" style="margin-bottom: 20px;">
+              <label for="firstnum" class="input-group-addon"
+                ><span>用户账号</span>
+              </label>
+              <input
+                id="firstnum"
+                class="form-control"
+                type="number"
+                name="firstnum"
+                value="{{firstnum}}"
+                min="1"
+                max="999999999"
+                aria-describedby="basic-addon2"
+                placeholder="请确认用户账号,例如：20166904"
+                required
+              />
+            </div>
+
+            <div style="float: right;">
+              <input
+                class="btn btn-primary btn-lg "
+                type="submit"
+                value="提交"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

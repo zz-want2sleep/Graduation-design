@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from django.forms import ModelForm
 from .models import BookInstance, Author
 from django import forms
@@ -55,29 +56,19 @@ class RenewBookModelForm(ModelForm):
 
 
 class AuthorModelForm(ModelForm):
-    def clean_first_name(self):
-        data = self.cleaned_data['first_name']
 
-        if data == ' ':
-            raise ValidationError(_('无效名字'))
-        return data
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('date_of_birth')
+        end_date = cleaned_data.get('date_of_death')
+        if start_date and end_date:
+            if start_date >= end_date:
+                raise ValidationError(_('出生日期必须小于死亡时间！'), _('请仔细检查！'))
 
-    def clean_last_name(self):
-        data = self.cleaned_data['last_name']
-
-        if data == ' ':
-            raise ValidationError(_('无效姓氏'))
-
-        # Remember to always return the cleaned data.
-        return data
-
-    def clean_date_of_birth(self):
-        data = self.cleaned_data['date_of_birth']
-        return data
-
-    def clean_date_of_death(self):
-        data = self.cleaned_data['date_of_death']
-        return data
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['date_of_birth'].widget.attrs.update({'type': 'date'})
+        self.fields['date_of_death'].widget.attrs.update({'type': 'date'})
 
     class Meta:
         model = Author
@@ -176,9 +167,30 @@ class Statistical(forms.Form):
            )
 
     threeChoice = forms.ChoiceField(
-        label=u'统计对象', choices=CHO, )
+        label=u'统计对象', choices=CHO,)
+    start_date = forms.DateField(help_text="请设置开始时间。", widget=forms.TextInput(
+        attrs={'type': 'date'}), label='设置开始时间')
+    end_date = forms.DateField(help_text="请设置结束时间。", widget=forms.TextInput(
+        attrs={'type': 'date'}), label='设置结束时间')
 
-    def clean_threeChoice(self):
-        data = self.cleaned_data['threeChoice']
-        # Remember to always return the cleaned data.
-        return data
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get("start_date")
+        end_date = cleaned_data.get("end_date")
+        if start_date and end_date:
+            if start_date >= end_date:
+                raise ValidationError(_('开始时间必须小于结束时间！'))
+
+
+# Group
+
+
+class GroupForm(forms.Form):
+    group = forms.ModelMultipleChoiceField(
+        queryset=Group.objects.all(), label='用户分组', help_text='Select a group 按住 ”Control”，或者Mac上的 “Command”，可以选择多个。',)
+
+    def clean_group(self):
+        if self.cleaned_data['group']:
+            return self.cleaned_data['group']
+        else:
+            return []

@@ -27,6 +27,11 @@ from django.conf.urls import url
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+# captcha url
+urlpatterns += [
+    path('captcha/', include('captcha.urls'))
+]
+
 # Use include() to add paths from the catalog application
 
 urlpatterns += [

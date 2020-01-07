@@ -30,12 +30,15 @@
 <!-- /.row -->
 {% if history_list %}
 <ul class="list-group">
-  {% for history in history_list %}
-  <li class="list-group-item"><span class="glyphicon glyphicon-book"></span> <strong>{{ history.books }}</strong></span> <span class="glyphicon glyphicon-time"></span>
+{% for history in history_list %}
+  <li class="list-group-item">
+    <a href="{% url 'catalog:book_filter' name=history.books %}"><span class="glyphicon glyphicon-book"></span> 
+      <strong>{{ history.books }}</strong></span>
+     </a><span class="glyphicon glyphicon-time"></span>
 {{ history.rent_time }}
   </li>
 
-  {% endfor %}
+{% endfor %}
 </ul>
 {% else %}
 <div class="alert alert-success" role="alert">...</div>

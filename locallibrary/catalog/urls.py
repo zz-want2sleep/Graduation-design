@@ -13,7 +13,11 @@ urlpatterns = [
     path('books/s/<str:name>', views.BookListView1.as_view(), name="book_filter"),
     # bulk create user
     path('addusers/', views.addusers, name='addusers'),
+    # bulk delete user
+    path('deleteusers/', views.deleteusers, name='deleteusers'),
+
     # path('addusers1/', views.addusers1, name='addusers1'),
+    path('group/', views.group, name="group"),
 
 ]
 # Borrower URLConfig
@@ -113,4 +117,19 @@ urlpatterns += [
 # statistical state统计
 urlpatterns += [
     path('statistical/', views.statistical, name="statistical")
+]
+
+# returned book
+urlpatterns += [
+    path(r'returned/<uuid:id>/<path:next>/',
+         views.returned, name="returnedbook")
+]
+
+# captcha image change
+urlpatterns += [
+    path(r'loginCaptcha/', views.loginCaptcha, name="captcha")
+]
+# jquery user query
+urlpatterns += [
+    path(r'userQuery/', views.userQuery, name="userQuery")
 ]

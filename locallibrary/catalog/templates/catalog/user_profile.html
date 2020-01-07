@@ -25,6 +25,21 @@
     <li class="list-group-item list-group-item-info">
       姓氏：{{user.last_name}}
     </li>
+    {%if user.extension.telephone != null %}
+    <li class="list-group-item list-group-item-info">
+      <span class="glyphicon glyphicon-earphone"></span>
+      电话：{{user.extension.telephone}}
+    </li>
+    {%else%}
+    <li class="list-group-item list-group-item-danger">
+      <span class="glyphicon glyphicon-earphone"></span>
+      电话：请完善电话信息！
+    </li>
+    {% endif %}
+    <li class="list-group-item list-group-item-info">
+      <span class="glyphicon glyphicon-education"></span>
+      学校：{{user.extension.school}}
+    </li>
     {%if user.email %}
     <li class="list-group-item list-group-item-info">
       <span class="glyphicon glyphicon-envelope"></span> email：{{user.email}}
@@ -32,7 +47,8 @@
     {%else%}
     <li class="list-group-item list-group-item-danger">
       <span class="glyphicon glyphicon-envelope"></span>
-      email：建议完善邮箱信息以便忘记密码时找回密码！
+      email：请完善个人邮箱信息<strong class="text-success">（必填项）</strong
+      >，以便忘记密码后能通过邮件来找回密码！
     </li>
     {% endif %}
     <li class="list-group-item list-group-item-info">

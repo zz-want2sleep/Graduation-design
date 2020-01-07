@@ -1,5 +1,10 @@
 {% extends "base_generic.html" %} {% block content %}
+<span></span>
+{%if request.get_full_path|slice:"-3:" == "o=1"%}
+<div class="alert alert-danger" role="alert">强制退出登录</div>
+{%elif request.get_full_path|slice:"-1:" == "/"%}
 <div class="alert alert-success" role="alert">成功退出登录</div>
+{%endif%}
 <div class="jumbotron">
   <h1>安全登出为账号安全提供保障</h1>
   <p class="text-primary">感谢您今天在本站花费了一些宝贵时间。</p>
@@ -9,4 +14,12 @@
     >
   </p>
 </div>
+<script>
+  if (document.querySelector(".login")) {
+    document.querySelector(".login").className = "hidden";
+  }
+  for (var i = 0; i < document.querySelectorAll("hr").length; i++) {
+    document.querySelectorAll("hr")[i].className = "hidden";
+  }
+</script>
 {% endblock %}

@@ -1,3 +1,5 @@
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 import uuid  # Required for unique book instances
 # Used to generate URLs by reversing the URL patterns
 from django.urls import reverse
@@ -45,13 +47,13 @@ class Book(models.Model):
     isbn = models.CharField(
         'ISBN', max_length=13, help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
     genre = models.ManyToManyField(
-        Genre, help_text="elect a genre for this book 按住 ”Control“，或者Mac上的 “Command”，可以选择多个。")
+        Genre, help_text="Select a genre for this book 按住 ”Control“，或者Mac上的 “Command”，可以选择多个。")
     # ManyToManyField used because genre can contain many books. Books can cover many genres.
     # Genre class has already been defined so we can specify the object above.
     language = models.ForeignKey(
         'Language', on_delete=models.SET_NULL, null=True)
     pic = models.ImageField('picture', upload_to='BookImage', null=True,
-                            blank=True, help_text='上传相应的图片。', default='BookImage/404.png')
+                            blank=True, help_text='上传相应的图片。', default='defaultImage/404.png')
 
     class Meta:
         ordering = ["-title"]
@@ -144,7 +146,7 @@ class Author(models.Model):
     date_of_birth = models.DateField(
         help_text='时间格式：2019/10/04', null=True, blank=True)
     date_of_death = models.DateField(
-        'Died', help_text='时间格式：2019/10/04',  null=True, blank=True)
+        'died', help_text='时间格式：2019/10/04',  null=True, blank=True)
 
     def get_absolute_url(self):
         """
@@ -189,7 +191,7 @@ class HistoryByManager(models.Model):
 class Visitor1(models.Model):
     user = models.OneToOneField(
         User, null=False, related_name='visitor1', on_delete=models.CASCADE)
-    session_key = models.CharField(null=False, max_length=40)
+    session_key = models.CharField(null=True, max_length=40)
     ip = models.CharField(null=True, max_length=200)
 # information
 
@@ -204,3 +206,35 @@ class Informations(models.Model):
 
     class Meta:
         ordering = ['Release_time']
+
+# relate user profile
+
+
+class UserExtension1(models.Model):
+    # 定义一个一对一的外键
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='extension')
+    telephone = models.CharField(
+        max_length=11, unique=True, null=True, blank=True,)
+    school = models.CharField(
+        max_length=100, null=True, blank=True, default='中南林业科技大学涉外学院')
+
+
+# 这是一个信号函数，即每创建一个User对象时，就会新建一个userextionsion进行绑定，使用了receiver这个装饰器
+@receiver(post_save, sender=User)
+def handler_user_extension(sender, instance, created, **kwargs):
+    if created:  # 如果是第一次创建user对象，就创建一个userextension对象进行绑定
+        UserExtension1.objects.create(user=instance)
+    else:  # 如果是修改user对象，那么也要将extension进行保存
+        instance.extension.save()
+# old session
+
+
+class OldSession(models.Model):
+    session_key = models.CharField(null=True, max_length=150)
+
+# old ip
+
+
+class OldIp(models.Model):
+    ip = models.CharField(null=True, max_length=100)

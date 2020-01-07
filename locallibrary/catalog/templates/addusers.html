@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    {% load static %}
+    <link rel="icon" href="{%static 'catalog/image/fav.ico'%}" />
     <title>选取人数范围</title>
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -17,9 +19,17 @@
       </div>
     </div>
 
-    {% if request.session.error == 'error' %}
-    <div class="alert alert-danger" role="alert">
-      讲真的,你可能需要debug一下你的眼睛，以及装个小plugin来协助你大脑进行记忆，都说了<strong>学号唯一</strong>。
+    {% if error %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+      <strong>请注意学号要唯一!</strong>
     </div>
     {%endif%}
     <div class="jumbotron" style="padding-top: 0;">

@@ -1,6 +1,19 @@
 {% extends "base_generic.html" %}
 {% block content %}
 
+{%if request.get_full_path|slice:"-3:" == "a=2" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  成功创建作者
+</div>
+{%endif%}
+
+{%if request.get_full_path|slice:"-3:" == "d=2" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  成功删除作者
+</div>
+{%endif%}
 <div class="row">
   <div class="col-lg-6">
     <div class="input-group">

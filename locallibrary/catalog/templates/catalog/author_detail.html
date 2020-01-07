@@ -1,4 +1,13 @@
 {% extends "base_generic.html" %} {% block content %}
+<span></span>
+{%if request.get_full_path|slice:"-3:" == "u=2" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  完成修改操作
+</div>
+{%endif%}
 <style>
   .update a,
   .delete a {

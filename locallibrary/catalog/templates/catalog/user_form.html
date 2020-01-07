@@ -1,20 +1,4 @@
 {% extends "base_generic.html" %} {% block content %}
-<div class="panel panel-primary">
-  <div class="panel-heading">
-    <h3 class="panel-title">完善个人信息</h3>
-  </div>
-  <div class="panel-body">
-    <form action="" method="post">
-      {% csrf_token %}
-<div class="table-responsive ">
-      <table class="table table-bordered table-striped">
-        {{ form.as_table }}
-      </table>
-      <input type="submit" value="提交" class="btn btn-primary btn-lg btn-block" />
-    </form>
-  </div>
-</div>
-</div>
 <style>
   .errorlist {
     background-color: pink;
@@ -28,4 +12,42 @@
     margin-left:10px;
   }
 </style>
+{{request.session.tel}}
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">完善个人信息</h3>
+  </div>
+  <div class="panel-body">
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+<div class="table-responsive ">
+      <table class="table table-bordered table-striped">
+        {{ form.as_table }}
+        <tr>
+          <th>
+            <label for='id_tel'>电话:</label>
+          </th>
+          <td>
+            {%if user.extension.telephone and tel == null%}
+            <input type="number" maxlength='11' class="form-control" name="telephone" value="{{user.extension.telephone}}">
+            {%elif tel%}
+            <input type="number" class="form-control" maxlength='11' name="telephone" value="{{tel}}">
+            {%else%}
+            <input type="number" class="form-control" maxlength='11' name="telephone" >
+            {%endif%}
+          </td>
+        </tr>
+      </table>
+      <input type="submit" value="提交" class="btn btn-primary btn-lg btn-block" />
+    </form>
+  </div>
+</div>
+</div>
+<!-- {{tel}} -->
+<script>
+
+  if($('.errorlist')){
+    $('.errorlist').addClass('alert alert-warning');
+  }
+</script>
 {% endblock %}

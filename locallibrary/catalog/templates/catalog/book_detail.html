@@ -1,4 +1,40 @@
 {% extends "base_generic.html" %}  {% block content %}
+{%if request.get_full_path|slice:"-3:" == "a=6" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  成功创建图书副本
+</div>
+{%endif%}
+{%if request.get_full_path|slice:"-3:" == "e=6" %}
+<div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  创建图书副本失败
+</div>
+{%endif%}
+{%if request.get_full_path|slice:"-3:" == "a=1" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  成功创建图书
+</div>
+{%endif%}
+{%if request.get_full_path|slice:"-3:" == "a=1" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  成功创建图书
+</div>
+{%endif%}
+{%if request.get_full_path|slice:"-3:" == "u=1" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  完成修改操作
+</div>
+{%endif%}
+{%if request.get_full_path|slice:"-3:" == "s=1" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  完成归还操作
+</div>
+{%endif%}
 {%if request.get_full_path|slice:"-2:" == "=4" %}
 <div class="alert alert-success" role="alert"><strong>完成租借操作</strong></div>
 {%endif%}
@@ -34,6 +70,7 @@
 >
 {%endif%}
 </div>
+
 {%if book.pic%}
 <div class="panel panel-default">
   <div class="panel-heading">
@@ -109,6 +146,12 @@
               <p class="text-muted"><strong><span class="glyphicon glyphicon-qrcode"></span> Id:</strong> {{copy.id}}</p>
             </div>
             <div class="col-sm-4 borrow" >
+              {% if user.is_authenticated and perms.catalog.can_mark_returned %}
+              {%if copy.status == 'o'%}
+              <a href="{% url 'catalog:returnedbook' id=copy.id next=request.path %}" class="btn btn-danger returned" style="float: right;margin-left: 10px;"><span class="
+                glyphicon glyphicon-star-empty"></span> <span class="text-default">归还</span></a>
+                {%endif%}
+                {%endif%}
               {% if user.is_authenticated and perms.catalog.can_mark_returned %}
           <a href="{%url 'catalog:rent_out' id=copy.id pk=book.pk %}" class="btn btn-primary" style="float: right; margin-left:10px;"><span class="
             glyphicon glyphicon-star-empty"></span> <span class="text-default">租借</span></a>

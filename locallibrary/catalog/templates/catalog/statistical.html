@@ -1,4 +1,24 @@
 {% extends "base_generic.html" %} {% block content %}
+<style>
+    .errorlist {
+      background-color: pink;
+    }
+    .helptext {
+      color:blue;
+      font-weight: bold;
+    }
+    .statistics1 {
+        margin-left:20px;
+    }
+    .fieldWrapper {
+      display: inline-block;
+      margin-left:20px;
+    }
+    #Setting_date {
+        display: inline-block;
+        margin-bottom:20px;
+    }
+  </style>
 <div class="panel panel-primary">
   <div class="panel-heading">
     <h3 class="panel-title">统计信息查询</h3>
@@ -7,44 +27,92 @@
     <form action="" method="post">
       {% csrf_token %}
 <div class="table-responsive ">
-        <div style="display: inline-block;margin-left:20px;">{{ form }}
-        </div>
-        <div style="display: inline-block;">
-            <label for="date1" style="margin-left:20px;" >设置开始日期：</label>
-            <input type="date" name='date1' id='date1' title="注意：这是个日期要小于结束日期。" value="2019-11-01"  min="2019-11-01" max={{date|safe}} required/>
-        <label style="margin-left:20px;" for="date2">设置结束日期：</label>
-        <input type="date" name='date2' id='date2' title="注意：这是个日期要大于开始日期。"min="2019-11-01" max={{date|safe}} value={{date|safe}} required/>
-        </div>
-        <button type="submit" class="btn btn-primary statistics"><span class="glyphicon glyphicon-search"></span> 查询</button>
-    </form>
+    {{ form.non_field_errors|safe }}    <!-- 每个字段的错误 -->
+
+    <div class="fieldWrapper">
+        {{ form.threeChoice.errors }}  <!-- 表单的一个错误清单 -->
+        <label for="{{ form.threeChoice.id_for_label }}">查询对象:</label>
+        {{ form.threeChoice }}
+    </div>
+<div id="Setting_date" class="hidden">
+    <div class="fieldWrapper">
+        {{ form.start_date.errors }}
+        <label for="{{ form.start_date.id_for_label }}">设置开始时间:</label>
+        {{ form.start_date }}
+    </div>
+    
+    <div class="fieldWrapper">
+        {{ form.end_date.errors }}
+        <label for="{{ form.end_date.id_for_label }}">设置结束时间:</label>
+        {{ form.end_date }}
+    </div>
+</div>
+        <button type="submit" class="btn btn-primary statistics1 hidden"><span class="glyphicon glyphicon-search"></span> 查询</button>
+        </form>
+
   </div>
 </div>
 </div>
-<div class="panel panel-default">
+<div class="panel panel-default" id="Bar_charts">
     <div class="panel-body">
         <div id="container1" style="min-width:400px;height:400px"></div>
     </div>
   </div>
-<style>
-  .errorlist {
-    background-color: pink;
-  }
-  .helptext {
-    color:blue;
-    font-weight: bold;
-  }
-  .statistics {
-      margin-left:20px;
-  }
-</style>
+
+<script>
+$('select').on('change',function(){
+    // console.log($('option:selected').val())
+        if($('option:selected').val()=='0'){
+            if(!$('.statistics1').hasClass('hidden')){
+                $('.statistics1').addClass('hidden')
+                window.location = "{% url 'catalog:statistical'%}"
+            }
+            if($('#Bar_charts').hasClass('hidden')){
+                $('#Bar_charts').removeClass('hidden')
+            }
+            if(!$('#Setting_date').hasClass('hidden')){
+                $('#Setting_date').addClass('hidden')
+            }
+            if($('#pie').hasClass('hidden')){
+                $('#pie').removeClass('hidden')
+            }
+        }else if($('option:selected').val()=='1'){
+            if($('#pie').hasClass('hidden')){
+                $('#pie').removeClass('hidden')
+            } 
+            if(!$('.statistics1').hasClass('hidden')){
+                $('.statistics1').addClass('hidden')
+            }
+            if(!$('#Bar_charts').hasClass('hidden')){
+                $('#Bar_charts').addClass('hidden')
+            }
+            if(!$('#Setting_date').hasClass('hidden')){
+                $('#Setting_date').addClass('hidden')
+            }
+        }else if($('option:selected').val()=='2'){
+            if($('.statistics1').hasClass('hidden')){
+                $('.statistics1').removeClass('hidden')
+            }
+        if($('#Bar_charts').hasClass('hidden')){
+            $('#Bar_charts').removeClass('hidden')
+        }
+        if($('#Setting_date').hasClass('hidden')){
+            $('#Setting_date').removeClass('hidden')
+        } 
+        if(!$('#pie').hasClass('hidden')){
+            $('#pie').addClass('hidden')
+        } 
+}
+    })
+</script>
 {%if dic != null %}
 <script src="https://code.highcharts.com.cn/highcharts/highcharts.js"></script>
         <script src="https://code.highcharts.com.cn/highcharts/modules/exporting.js"></script>
         <script src="https://code.highcharts.com.cn/highcharts/modules/oldie.js"></script>
         <script src="https://img.hcharts.cn/highcharts-plugins/highcharts-zh_CN.js"></script>
         <script src="https://code.highcharts.com.cn/highcharts/themes/dark-unica.js"></script>        
-        <script>
-           
+<script>
+    function Bar(){if($('option:selected').val()=='0'||$('option:selected').val()=='2'){    
             var dic =JSON.parse('{{ dic|safe }}')
             var title1 = "{{title1}}"
 
@@ -102,18 +170,23 @@
         data: Object.values(dic)
     },]
 });
+       }
+    }
+    Bar()
+       $('select').on('change',Bar)
+</script>
 
-        </script>
 {%endif%}
-<div class="panel panel-default">
+<div class="panel panel-default" id="pie">
     <div class="panel-body">
-        <div id="container2" style="min-width:400px;height:400px"></div>
+        <div id="container2" style="min-width:400px;height:400px;"></div>
     </div>
   </div>
 
 
 {% if dic1 != null%}
 <script>
+    function pie(){ if($('option:selected').val()=='0'||$('option:selected').val()=='1'){
      function GetPercent(num, total) {
     /// <summary>
     /// 求百分比
@@ -140,7 +213,7 @@ for(let j=0;j<Object.keys(dic1).length;j++){
     dict['y']=GetPercent(Object.values(dic1)[j], sum)
     list1.push(dict)
 }
-console.log(list1)
+// console.log(list1)
 // Build the chart
 Highcharts.chart('container2', {
 		chart: {
@@ -171,6 +244,48 @@ Highcharts.chart('container2', {
 				data: list1
 		}]
 });
+    }}
+    pie()
+   $('select').on('change',pie)
 </script>
+{%endif%}
+{% if error_msg == null%}
+<script>
+window.onload = function(){
+    if($('option:selected').val()=='2'){
+            if($('#Bar_charts').hasClass('hidden')){
+                $('#Bar_charts').removeClass('hidden')
+            }
+            if($('#Setting_date').hasClass('hidden')){
+                $('#Setting_date').removeClass('hidden')
+            }
+            if(!$('#pie').hasClass('hidden')){
+                $('#pie').addClass('hidden')
+            }
+if($('.statistics1').hasClass('hidden')){
+    $('.statistics1').removeClass('hidden')
+}
+    }
+}
+</script>
+{%elif error_msg != null%}
+<script>
+    window.onload = function(){
+        if($('option:selected').val()=='2'){
+                if(!$('#Bar_charts').hasClass('hidden')){
+                    $('#Bar_charts').addClass('hidden')
+                }
+                if($('#Setting_date').hasClass('hidden')){
+                    $('#Setting_date').removeClass('hidden')
+                }
+                if(!$('#pie').hasClass('hidden')){
+                    $('#pie').addClass('hidden')
+                }
+    if($('.statistics1').hasClass('hidden')){
+        $('.statistics1').removeClass('hidden')
+    }
+    }
+}
+    </script>
 {%endif%}
 {% endblock %}

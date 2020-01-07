@@ -1,5 +1,11 @@
 {% extends "base_generic.html" %}
 {% block content %}
+{%if request.get_full_path|slice:"-3:" == "d=1" %}
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  成功删除图书
+</div>
+{%endif%}
 <div class="row">
     <div class="col-lg-6">
       <div class="input-group">
